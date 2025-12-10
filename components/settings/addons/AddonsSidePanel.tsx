@@ -9,7 +9,11 @@ import {
   IconCube,
   IconX,
   IconSearch,
+  IconLayoutList,
+  IconStack2,
+  IconTextCaption,
 } from "@tabler/icons-react";
+import ChooseLineItemModal from "../service-packages/ChooseLineItemModal";
 
 interface Addon {
   id: string;
@@ -105,6 +109,8 @@ export default function AddonsSidePanel({ isOpen, onClose, addon, fullPage = fal
   const [partsServices, setPartsServices] = useState<PartService[]>([]);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAddDropdown, setShowAddDropdown] = useState(false);
+  const [showLineItemModal, setShowLineItemModal] = useState(false);
 
   useEffect(() => {
     if (addon) {
@@ -144,6 +150,21 @@ export default function AddonsSidePanel({ isOpen, onClose, addon, fullPage = fal
     setPartsServices(partsServices.filter(item => item.id !== id));
   };
 
+  const handleLineItemSelect = (items: { id: string; name: string; code: string; unitCost: number; markup: string; sellingPrice: number; quantity: number; image?: string }[]) => {
+    const newItems: PartService[] = items.map(item => ({
+      id: Date.now().toString() + Math.random(),
+      name: item.name,
+      description: item.code,
+      image: item.image,
+      type: "part" as const,
+      unitCost: item.unitCost,
+      markup: item.markup ? parseFloat(item.markup.replace('%', '').replace('x', '')) : null,
+      quantity: item.quantity,
+      price: item.sellingPrice,
+    }));
+    setPartsServices([...partsServices, ...newItems]);
+    setShowLineItemModal(false);
+  };
 
   const filteredCatalog = mockCatalog.filter(item => 
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -236,13 +257,57 @@ export default function AddonsSidePanel({ isOpen, onClose, addon, fullPage = fal
                   {partsServices.length}
                 </span>
               </div>
-              <button 
-                onClick={() => setShowAddDialog(true)}
-                className="flex items-center gap-1.5 px-3 py-2 bg-white border border-[#E2E8F0] rounded-md text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] transition-colors"
-              >
-                <IconPlus size={16} stroke={2} />
-                Add
-              </button>
+              <div className="relative">
+                <button 
+                  onClick={() => setShowAddDropdown(!showAddDropdown)}
+                  className="flex items-center gap-1.5 px-3 py-2 bg-white border border-[#E2E8F0] rounded-md text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] transition-colors"
+                >
+                  <IconPlus size={16} stroke={2} />
+                  Add
+                </button>
+                
+                {/* Dropdown Menu */}
+                {showAddDropdown && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setShowAddDropdown(false)} 
+                    />
+                    <div className="absolute right-0 top-full mt-1 w-40 bg-white rounded-lg shadow-lg border border-[#E2E8F0] py-1 z-20">
+                      <button
+                        onClick={() => {
+                          setShowAddDropdown(false);
+                          setShowLineItemModal(true);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-[#374151] hover:bg-[#F8FAFC] transition-colors"
+                      >
+                        <IconLayoutList size={16} className="text-[#64748B]" />
+                        Line Item
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowAddDropdown(false);
+                          // TODO: Handle Bundle
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-[#374151] hover:bg-[#F8FAFC] transition-colors"
+                      >
+                        <IconStack2 size={16} className="text-[#64748B]" />
+                        Bundle
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowAddDropdown(false);
+                          // TODO: Handle Header
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-[#374151] hover:bg-[#F8FAFC] transition-colors"
+                      >
+                        <IconTextCaption size={16} className="text-[#64748B]" />
+                        Header
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Content */}
@@ -334,7 +399,7 @@ export default function AddonsSidePanel({ isOpen, onClose, addon, fullPage = fal
         </div>
       </div>
 
-      {/* Add Item Dialog */}
+      {/* Add Item Dialog - Legacy, kept for reference */}
       {showAddDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-xl shadow-xl w-[600px] max-h-[80vh] flex flex-col">
@@ -401,6 +466,13 @@ export default function AddonsSidePanel({ isOpen, onClose, addon, fullPage = fal
           </div>
         </div>
       )}
+
+      {/* Choose Line Item Modal */}
+      <ChooseLineItemModal
+        isOpen={showLineItemModal}
+        onClose={() => setShowLineItemModal(false)}
+        onAdd={handleLineItemSelect}
+      />
     </div>
   );
 }
