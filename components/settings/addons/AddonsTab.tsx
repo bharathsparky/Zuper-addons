@@ -128,18 +128,15 @@ const mockAddons: Addon[] = [
   },
 ];
 
-const categories = ["All Categories", "Upgrades", "Warranties", "Fees", "Discounts", "Materials", "Labor"];
 const statuses = ["All Status", "Active", "Inactive"];
 
 export default function AddonsTab() {
   const router = useRouter();
   const [addons] = useState<Addon[]>(mockAddons);
-  const [categoryFilter, setCategoryFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const [actionMenuOpen, setActionMenuOpen] = useState<string | null>(null);
   
@@ -157,18 +154,6 @@ export default function AddonsTab() {
       return `$${addon.price.toFixed(2)}/${addon.unitLabel}`;
     }
     return `$${addon.price.toFixed(2)}`;
-  };
-
-  const getCategoryBadgeColor = (category: string) => {
-    const colors: Record<string, string> = {
-      "Upgrades": "bg-[#DBEAFE] text-[#1D4ED8] border-[#93C5FD]",
-      "Warranties": "bg-[#FEF3C7] text-[#D97706] border-[#FCD34D]",
-      "Fees": "bg-[#FEE2E2] text-[#DC2626] border-[#FCA5A5]",
-      "Discounts": "bg-[#D1FAE5] text-[#059669] border-[#6EE7B7]",
-      "Materials": "bg-[#E0E7FF] text-[#4338CA] border-[#A5B4FC]",
-      "Labor": "bg-[#FCE7F3] text-[#DB2777] border-[#F9A8D4]",
-    };
-    return colors[category] || "bg-[#F3F4F6] text-[#6B7280] border-[#D1D5DB]";
   };
 
   const handleCreateAddon = () => {
@@ -227,43 +212,10 @@ export default function AddonsTab() {
             <div className="flex items-center gap-3">
               <IconFilter size={18} stroke={1.5} className="text-[#9ca3af]" />
 
-              {/* Category Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setCategoryDropdownOpen(!categoryDropdownOpen);
-                    setStatusDropdownOpen(false);
-                  }}
-                  className="flex items-center gap-8 px-4 py-1.5 bg-white border border-[#d1d5db] rounded-lg text-sm text-[#6b7280] hover:bg-[#f9fafb]"
-                >
-                  {categoryFilter || "Category"}
-                  <IconChevronDown size={16} stroke={2} className="text-[#9ca3af]" />
-                </button>
-                {categoryDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-44 bg-white border border-[#e5e7eb] rounded-lg shadow-lg z-10">
-                    {categories.map((cat) => (
-                      <button
-                        key={cat}
-                        onClick={() => {
-                          setCategoryFilter(cat === "All Categories" ? "" : cat);
-                          setCategoryDropdownOpen(false);
-                        }}
-                        className="w-full px-4 py-2 text-left text-sm text-[#374151] hover:bg-[#f9fafb] first:rounded-t-lg last:rounded-b-lg"
-                      >
-                        {cat}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
               {/* Status Dropdown */}
               <div className="relative">
                 <button
-                  onClick={() => {
-                    setStatusDropdownOpen(!statusDropdownOpen);
-                    setCategoryDropdownOpen(false);
-                  }}
+                  onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
                   className="flex items-center gap-8 px-4 py-1.5 bg-white border border-[#d1d5db] rounded-lg text-sm text-[#6b7280] hover:bg-[#f9fafb]"
                 >
                   {statusFilter || "Status"}
