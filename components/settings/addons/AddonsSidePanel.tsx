@@ -194,9 +194,9 @@ export default function AddonsSidePanel({ isOpen, onClose, addon, fullPage = fal
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto p-6">
-        <div className="flex gap-6 h-full">
+        <div className="flex gap-6 items-start">
           {/* Left Card - Add-on Details */}
-          <div className="w-[440px] shrink-0 bg-white rounded-xl shadow-sm border border-[#E2E8F0] overflow-hidden">
+          <div className="w-[400px] shrink-0 bg-white rounded-xl shadow-sm border border-[#E2E8F0] overflow-hidden">
             <div className="p-6">
               <h2 className="text-base font-semibold text-[#1E293B] mb-6">Add-on Details</h2>
               
@@ -248,7 +248,7 @@ export default function AddonsSidePanel({ isOpen, onClose, addon, fullPage = fal
           </div>
 
           {/* Right Card - Parts & Services */}
-          <div className="flex-1 bg-white rounded-xl shadow-sm border border-[#E2E8F0] overflow-hidden flex flex-col">
+          <div className="flex-1 bg-white rounded-xl shadow-sm border border-[#E2E8F0] overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0]">
               <div className="flex items-center gap-3">
@@ -311,10 +311,10 @@ export default function AddonsSidePanel({ isOpen, onClose, addon, fullPage = fal
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-auto">
+            <div className="overflow-auto">
               {partsServices.length === 0 ? (
                 /* Empty State */
-                <div className="flex-1 flex flex-col items-center justify-center py-16 h-full">
+                <div className="flex flex-col items-center justify-center py-16">
                   <div className="mb-4">
                     <img 
                       src="/figma-assets/empty-state-illustration.svg" 
@@ -326,9 +326,9 @@ export default function AddonsSidePanel({ isOpen, onClose, addon, fullPage = fal
                 </div>
               ) : (
                 /* Parts & Services Table */
-                <div className="flex flex-col h-full">
+                <div>
                   {/* Table */}
-                  <div className="flex-1 overflow-auto">
+                  <div className="overflow-auto">
                     <table className="w-full">
                       <thead className="sticky top-0 bg-white">
                         <tr className="border-b border-[#E2E8F0]">
