@@ -1131,41 +1131,16 @@ export default function ServicePackageSidePanel({
                             );
                           }
 
-                          // Render group header row (collapsible)
-                          const isExpanded = expandedAddons[addon.id] ?? true;
-                          const addonTotal = getAddonTotal(addon);
-                          
+                          // Render group row (simple - like header)
                           return (
                             <React.Fragment key={addon.id}>
-                              {/* Group Header Row */}
-                              <tr 
-                                className="bg-[#F8FAFC] hover:bg-[#F1F5F9] cursor-pointer group"
-                                onClick={() => toggleAddonExpanded(addon.id)}
-                              >
+                              {/* Group Row - Simple like Header */}
+                              <tr className="bg-[#F8FAFC] group">
                                 <td className="px-4 py-4">
                                   <IconGripVertical size={16} className="text-[#CBD5E1] cursor-grab" />
                                 </td>
-                                <td className="px-4 py-4">
-                                  <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 rounded-lg bg-[#EDE9FE] flex items-center justify-center">
-                                      <IconPuzzle size={18} className="text-[#7C3AED]" />
-                                    </div>
-                                    <div>
-                                      <p className="text-sm font-semibold text-[#1E293B]">{addon.name}</p>
-                                      <p className="text-xs text-[#64748B]">
-                                        {addon.items.length} items • ${addonTotal.toFixed(2)}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td className="px-4 py-4"></td>
-                                <td className="px-4 py-4"></td>
-                                <td className="px-4 py-4 text-right">
-                                  {isExpanded ? (
-                                    <IconChevronUp size={18} className="text-[#64748B] inline" />
-                                  ) : (
-                                    <IconChevronDown size={18} className="text-[#64748B] inline" />
-                                  )}
+                                <td className="px-4 py-4" colSpan={4}>
+                                  <span className="text-sm font-medium text-[#1E293B]">{addon.name}</span>
                                 </td>
                                 <td className="px-4 py-4 text-center">
                                   <div className="relative inline-block">
@@ -1245,8 +1220,8 @@ export default function ServicePackageSidePanel({
                                 </td>
                               </tr>
                               
-                              {/* Group Items (expanded) */}
-                              {isExpanded && addon.items.map((item) => (
+                              {/* Group Items */}
+                              {addon.items.map((item) => (
                                 <tr key={item.id} className="hover:bg-[#F8FAFC] group">
                                   <td className="px-4 py-3 pl-8">
                                     <IconGripVertical size={14} className="text-[#CBD5E1] cursor-grab" />
