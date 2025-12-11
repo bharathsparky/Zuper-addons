@@ -930,12 +930,6 @@ export default function ServicePackageSidePanel({
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">
-                                {/* Profit margin badge when collapsed */}
-                                {!isExpanded && (
-                                  <span className="px-2 py-1 bg-[#FEF2F2] text-[#EF4444] text-xs font-medium rounded">
-                                    {addonProfitMargins[addon.id] || addon.profitMargin}% margin
-                                  </span>
-                                )}
                                 <div className="flex items-center gap-2">
                                   {isExpanded ? (
                                     <IconChevronUp size={18} className="text-[#64748B]" />
@@ -1015,68 +1009,71 @@ export default function ServicePackageSidePanel({
                                   </tbody>
                                 </table>
 
-                                {/* Add-on Profit Margin */}
-                                <div className="px-6 py-4 border-t border-[#E2E8F0] bg-white">
-                                  <div className="max-w-md">
-                                    <div className="p-4 border border-[#E2E8F0] rounded-xl">
-                                      <div className="flex items-center justify-between mb-3">
-                                        <div className="flex items-center gap-2">
-                                          <svg
-                                            width="18"
-                                            height="18"
-                                            viewBox="0 0 20 20"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M3.33337 10H16.6667M16.6667 10L10 3.33337M16.6667 10L10 16.6667"
-                                              stroke="#64748B"
-                                              strokeWidth="1.5"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                            />
-                                          </svg>
-                                          <span className="text-sm font-medium text-[#1E293B]">Profit Margin</span>
-                                        </div>
-                                        <div className="flex items-center gap-1 border-2 border-[#F87171] rounded-lg px-2.5 py-1 bg-white">
-                                          <input
-                                            type="number"
-                                            value={addonProfitMargins[addon.id] || addon.profitMargin}
-                                            onChange={(e) => handleAddonProfitMarginChange(addon.id, parseFloat(e.target.value) || 0)}
-                                            className="w-12 text-sm text-right text-[#1E293B] border-0 focus:outline-none focus:ring-0 bg-transparent"
-                                            step="0.01"
-                                            min="0"
-                                            max="99"
-                                          />
-                                          <span className="text-sm text-[#64748B]">%</span>
-                                        </div>
-                                      </div>
-                                      <div className="relative">
-                                        <input
-                                          type="range"
-                                          min="0"
-                                          max="99"
-                                          step="0.01"
-                                          value={addonProfitMargins[addon.id] || addon.profitMargin}
-                                          onChange={(e) => handleAddonProfitMarginChange(addon.id, parseFloat(e.target.value))}
-                                          className="w-full h-2 bg-[#FEE2E2] rounded-full appearance-none cursor-pointer"
-                                          style={{
-                                            background: `linear-gradient(to right, #EF4444 0%, #EF4444 ${addonProfitMargins[addon.id] || addon.profitMargin}%, #FEE2E2 ${addonProfitMargins[addon.id] || addon.profitMargin}%, #FEE2E2 100%)`,
-                                          }}
-                                        />
-                                      </div>
-                                      <div className="flex justify-between mt-1 text-xs text-[#94A3B8]">
-                                        <span>0%</span>
-                                        <span>99%</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </>
+                                </>
                             )}
                           </div>
                         );
                       })}
+                    </div>
+                  )}
+                  
+                  {/* Overall Add-ons Profit Margin - only show when there are add-ons */}
+                  {selectedAddons.length > 0 && (
+                    <div className="px-6 py-4 border-t border-[#E2E8F0] bg-white">
+                      <div className="max-w-md">
+                        <div className="p-4 border border-[#E2E8F0] rounded-xl">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M3.33337 10H16.6667M16.6667 10L10 3.33337M16.6667 10L10 16.6667"
+                                  stroke="#64748B"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                              <span className="text-sm font-medium text-[#1E293B]">Add-ons Profit Margin</span>
+                            </div>
+                            <div className="flex items-center gap-1 border-2 border-[#F87171] rounded-lg px-2.5 py-1 bg-white">
+                              <input
+                                type="number"
+                                value={addonProfitMargins["overall"] || 25}
+                                onChange={(e) => handleAddonProfitMarginChange("overall", parseFloat(e.target.value) || 0)}
+                                className="w-12 text-sm text-right text-[#1E293B] border-0 focus:outline-none focus:ring-0 bg-transparent"
+                                step="0.01"
+                                min="0"
+                                max="99"
+                              />
+                              <span className="text-sm text-[#64748B]">%</span>
+                            </div>
+                          </div>
+                          <div className="relative">
+                            <input
+                              type="range"
+                              min="0"
+                              max="99"
+                              step="0.01"
+                              value={addonProfitMargins["overall"] || 25}
+                              onChange={(e) => handleAddonProfitMarginChange("overall", parseFloat(e.target.value))}
+                              className="w-full h-2 bg-[#FEE2E2] rounded-full appearance-none cursor-pointer"
+                              style={{
+                                background: `linear-gradient(to right, #EF4444 0%, #EF4444 ${addonProfitMargins["overall"] || 25}%, #FEE2E2 ${addonProfitMargins["overall"] || 25}%, #FEE2E2 100%)`,
+                              }}
+                            />
+                          </div>
+                          <div className="flex justify-between mt-1 text-xs text-[#94A3B8]">
+                            <span>0%</span>
+                            <span>99%</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
