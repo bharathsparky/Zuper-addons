@@ -560,7 +560,7 @@ export default function ServicePackageSidePanel({
                               }}
                               className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
                             >
-                              Group
+                              Item Group
                             </button>
                           </div>
                         </>
@@ -622,7 +622,7 @@ export default function ServicePackageSidePanel({
                             }}
                             className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
                           >
-                            Group
+                            Item Group
                           </button>
                         </div>
                       </>

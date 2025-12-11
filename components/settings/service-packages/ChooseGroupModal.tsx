@@ -170,7 +170,7 @@ export default function ChooseGroupModal({ isOpen, onClose, onAdd }: ChooseGroup
       <div className="bg-white rounded-xl shadow-2xl w-[700px] max-h-[85vh] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E5E7EB]">
-          <h2 className="text-lg font-semibold text-[#111827]">Choose Group</h2>
+          <h2 className="text-lg font-semibold text-[#111827]">Choose Item Group</h2>
           <button
             onClick={onClose}
             className="p-1 text-[#6B7280] hover:text-[#111827] hover:bg-[#F3F4F6] rounded-md transition-colors"
@@ -194,7 +194,7 @@ export default function ChooseGroupModal({ isOpen, onClose, onAdd }: ChooseGroup
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Search Group"
+                placeholder="Search Item Group"
                 className="w-full pl-10 pr-4 py-2.5 border border-[#D1D5DB] rounded-lg text-sm text-[#111827] placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
               />
             </div>
@@ -227,7 +227,7 @@ export default function ChooseGroupModal({ isOpen, onClose, onAdd }: ChooseGroup
               <tr>
                 <th className="w-12 px-4 py-3"></th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-[#6B7280] uppercase tracking-wider">
-                  Group Name
+                  Item Group Name
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-[#6B7280] uppercase tracking-wider">
                   Status
@@ -318,7 +318,7 @@ export default function ChooseGroupModal({ isOpen, onClose, onAdd }: ChooseGroup
             disabled={selectedGroups.length === 0}
             className="px-4 py-2 text-sm font-medium text-white bg-[#EA580C] rounded-lg hover:bg-[#DC2626] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Add Group
+            Add Item Group
           </button>
         </div>
       </div>
