@@ -26,33 +26,33 @@ interface ChooseGroupModalProps {
 const mockGroups: Group[] = [
   {
     id: "1",
-    name: "Test Product Group 1",
-    description: "Test description",
+    name: "Roofing Shingle Add-ons",
+    description: "Premium shingle upgrades and accessories",
     status: "Active",
     totalItems: 2,
   },
   {
     id: "2",
-    name: "PRoduct Group 4",
+    name: "Roof Flashing Kit",
     status: "Inactive",
     totalItems: 1,
   },
   {
     id: "3",
-    name: "Test",
+    name: "Gutter Protection Bundle",
     status: "Active",
     totalItems: 0,
   },
   {
     id: "4",
-    name: "Test Group 1",
-    description: "Test Group 1",
+    name: "Roof Ventilation Package",
+    description: "Ridge vents and soffit vents combo",
     status: "Active",
     totalItems: 0,
   },
   {
     id: "5",
-    name: "Standard Package",
+    name: "Roof Underlayment Options",
     status: "Active",
     totalItems: 0,
   },
@@ -65,15 +65,15 @@ const mockGroups: Group[] = [
   },
   {
     id: "7",
-    name: "HVAC Installation Kit",
-    description: "All components for HVAC installation",
+    name: "Ice & Water Shield Kit",
+    description: "Protection for eaves and valleys",
     status: "Active",
     totalItems: 8,
   },
   {
     id: "8",
-    name: "Electrical Supplies",
-    description: "Basic electrical supplies bundle",
+    name: "Skylight Installation Add-ons",
+    description: "Skylights with flashing and accessories",
     status: "Inactive",
     totalItems: 3,
   },
@@ -196,12 +196,25 @@ export default function ChooseGroupModal({ isOpen, onClose, onAdd }: ChooseGroup
                   className="hover:bg-[#F9FAFB] transition-colors"
                 >
                   <td className="px-4 py-4">
-                    <input
-                      type="checkbox"
-                      checked={selectedGroups.includes(group.id)}
-                      onChange={() => handleToggleGroup(group.id)}
-                      className="w-4 h-4 text-[#3B82F6] border-[#D1D5DB] rounded focus:ring-[#3B82F6] focus:ring-offset-0 cursor-pointer"
-                    />
+                    <label className="relative flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedGroups.includes(group.id)}
+                        onChange={() => handleToggleGroup(group.id)}
+                        className="sr-only peer"
+                      />
+                      <div className={`w-5 h-5 border-2 rounded transition-all ${
+                        selectedGroups.includes(group.id)
+                          ? "bg-[#3B82F6] border-[#3B82F6]"
+                          : "bg-white border-[#D1D5DB]"
+                      }`}>
+                        {selectedGroups.includes(group.id) && (
+                          <svg className="w-full h-full text-white p-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        )}
+                      </div>
+                    </label>
                   </td>
                   <td className="px-4 py-4">
                     <div>
