@@ -8,6 +8,8 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconPackage,
+  IconSquare,
+  IconSquareCheck,
 } from "@tabler/icons-react";
 
 interface LineItem {
@@ -306,12 +308,16 @@ export default function ChooseLineItemModal({
             <thead className="bg-white sticky top-0 z-10">
               <tr className="border-b border-[#E2E8F0]">
                 <th className="px-4 py-3 text-left w-10">
-                  <input
-                    type="checkbox"
-                    checked={selectedItems.size === items.length && items.length > 0}
-                    onChange={handleSelectAll}
-                    className="w-4 h-4 rounded border-[#CBD5E1] text-[#F97316] focus:ring-[#F97316]"
-                  />
+                  <button
+                    onClick={handleSelectAll}
+                    className="flex items-center justify-center"
+                  >
+                    {selectedItems.size === items.length && items.length > 0 ? (
+                      <IconSquareCheck size={20} className="text-[#F97316]" />
+                    ) : (
+                      <IconSquare size={20} className="text-[#CBD5E1]" />
+                    )}
+                  </button>
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-[#64748B] uppercase tracking-wider min-w-[280px]">
                   Item
@@ -350,12 +356,16 @@ export default function ChooseLineItemModal({
               {items.map((item) => (
                 <tr key={item.id} className="hover:bg-[#F8FAFC]">
                   <td className="px-4 py-4">
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.has(item.id)}
-                      onChange={() => handleSelectItem(item.id)}
-                      className="w-4 h-4 rounded border-[#CBD5E1] text-[#F97316] focus:ring-[#F97316]"
-                    />
+                    <button
+                      onClick={() => handleSelectItem(item.id)}
+                      className="flex items-center justify-center"
+                    >
+                      {selectedItems.has(item.id) ? (
+                        <IconSquareCheck size={20} className="text-[#F97316]" />
+                      ) : (
+                        <IconSquare size={20} className="text-[#CBD5E1]" />
+                      )}
+                    </button>
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-start gap-3">

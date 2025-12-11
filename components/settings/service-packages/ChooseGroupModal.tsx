@@ -8,12 +8,23 @@ import {
   IconChevronRight,
 } from "@tabler/icons-react";
 
+interface GroupItem {
+  id: string;
+  name: string;
+  description?: string;
+  unitCost: number;
+  markup: string;
+  quantity: number;
+  price: number;
+}
+
 interface Group {
   id: string;
   name: string;
   description?: string;
   status: "Active" | "Inactive";
   totalItems: number;
+  items: GroupItem[];
 }
 
 interface ChooseGroupModalProps {
@@ -22,7 +33,7 @@ interface ChooseGroupModalProps {
   onAdd: (groups: Group[]) => void;
 }
 
-// Mock data for groups
+// Mock data for groups with items
 const mockGroups: Group[] = [
   {
     id: "1",
@@ -30,31 +41,51 @@ const mockGroups: Group[] = [
     description: "Premium shingle upgrades and accessories",
     status: "Active",
     totalItems: 2,
+    items: [
+      { id: "1-1", name: "Architectural Shingles Upgrade", description: "Premium dimensional shingles", unitCost: 150, markup: "2x", quantity: 1, price: 300 },
+      { id: "1-2", name: "Shingle Color Upgrade", description: "Designer color options", unitCost: 75, markup: "2x", quantity: 1, price: 150 },
+    ],
   },
   {
     id: "2",
     name: "Roof Flashing Kit",
     status: "Inactive",
     totalItems: 1,
+    items: [
+      { id: "2-1", name: "Aluminum Drip Edge Flashing", description: "Premium aluminum drip edge", unitCost: 100, markup: "1.5x", quantity: 1, price: 150 },
+    ],
   },
   {
     id: "3",
     name: "Gutter Protection Bundle",
     status: "Active",
-    totalItems: 0,
+    totalItems: 3,
+    items: [
+      { id: "3-1", name: "Gutter Guards", description: "Aluminum mesh guards", unitCost: 200, markup: "2x", quantity: 1, price: 400 },
+      { id: "3-2", name: "Downspout Extensions", description: "Flexible extensions", unitCost: 50, markup: "2x", quantity: 2, price: 200 },
+      { id: "3-3", name: "Splash Blocks", description: "Decorative splash blocks", unitCost: 25, markup: "2x", quantity: 4, price: 200 },
+    ],
   },
   {
     id: "4",
     name: "Roof Ventilation Package",
     description: "Ridge vents and soffit vents combo",
     status: "Active",
-    totalItems: 0,
+    totalItems: 2,
+    items: [
+      { id: "4-1", name: "Ridge Vent", description: "Continuous ridge vent", unitCost: 180, markup: "1.5x", quantity: 1, price: 270 },
+      { id: "4-2", name: "Soffit Vents", description: "Aluminum soffit vents", unitCost: 80, markup: "1.5x", quantity: 4, price: 480 },
+    ],
   },
   {
     id: "5",
     name: "Roof Underlayment Options",
     status: "Active",
-    totalItems: 0,
+    totalItems: 2,
+    items: [
+      { id: "5-1", name: "Synthetic Underlayment", description: "Premium synthetic felt", unitCost: 120, markup: "2x", quantity: 1, price: 240 },
+      { id: "5-2", name: "Self-Adhesive Underlayment", description: "Peel and stick", unitCost: 200, markup: "1.5x", quantity: 1, price: 300 },
+    ],
   },
   {
     id: "6",
@@ -62,13 +93,25 @@ const mockGroups: Group[] = [
     description: "Complete roofing materials package",
     status: "Active",
     totalItems: 5,
+    items: [
+      { id: "6-1", name: "30-Year Shingles", description: "Lifetime warranty shingles", unitCost: 500, markup: "2x", quantity: 1, price: 1000 },
+      { id: "6-2", name: "Ice & Water Shield", description: "Self-adhering membrane", unitCost: 150, markup: "2x", quantity: 1, price: 300 },
+      { id: "6-3", name: "Starter Strip", description: "Pre-cut starter shingles", unitCost: 80, markup: "2x", quantity: 1, price: 160 },
+      { id: "6-4", name: "Hip & Ridge Caps", description: "Matching ridge caps", unitCost: 100, markup: "2x", quantity: 1, price: 200 },
+      { id: "6-5", name: "Roofing Nails", description: "Galvanized roofing nails", unitCost: 40, markup: "2x", quantity: 2, price: 160 },
+    ],
   },
   {
     id: "7",
     name: "Ice & Water Shield Kit",
     description: "Protection for eaves and valleys",
     status: "Active",
-    totalItems: 8,
+    totalItems: 3,
+    items: [
+      { id: "7-1", name: "Eave Protection", description: "6-foot eave coverage", unitCost: 180, markup: "1.5x", quantity: 1, price: 270 },
+      { id: "7-2", name: "Valley Protection", description: "Valley membrane", unitCost: 120, markup: "1.5x", quantity: 1, price: 180 },
+      { id: "7-3", name: "Pipe Boot Flashing", description: "Self-sealing pipe boots", unitCost: 60, markup: "2x", quantity: 3, price: 360 },
+    ],
   },
   {
     id: "8",
@@ -76,6 +119,11 @@ const mockGroups: Group[] = [
     description: "Skylights with flashing and accessories",
     status: "Inactive",
     totalItems: 3,
+    items: [
+      { id: "8-1", name: "Fixed Skylight", description: "22x46 fixed skylight", unitCost: 400, markup: "2x", quantity: 1, price: 800 },
+      { id: "8-2", name: "Skylight Flashing Kit", description: "Complete flashing set", unitCost: 150, markup: "2x", quantity: 1, price: 300 },
+      { id: "8-3", name: "Skylight Blinds", description: "Remote control blinds", unitCost: 200, markup: "2x", quantity: 1, price: 400 },
+    ],
   },
 ];
 

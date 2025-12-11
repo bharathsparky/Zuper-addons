@@ -15,6 +15,10 @@ import {
   IconFileText,
   IconPuzzle,
   IconDotsVertical,
+  IconEye,
+  IconEdit,
+  IconCopy,
+  IconTrash,
 } from "@tabler/icons-react";
 import ChooseLineItemModal from "./ChooseLineItemModal";
 import ChooseGroupModal from "./ChooseGroupModal";
@@ -204,6 +208,9 @@ export default function ServicePackageSidePanel({
   const [showLineItemModal, setShowLineItemModal] = useState(false);
   const [showGroupModal, setShowGroupModal] = useState(false);
   const [addingToTab, setAddingToTab] = useState<"parts-services" | "addons">("parts-services");
+  const [headerCount, setHeaderCount] = useState(1);
+  const [draggedAddonIndex, setDraggedAddonIndex] = useState<number | null>(null);
+  const [openActionMenuId, setOpenActionMenuId] = useState<string | null>(null);
 
   const data = packageData || mockPackageData;
 
@@ -297,6 +304,40 @@ export default function ServicePackageSidePanel({
       delete newMargins[addonId];
       return newMargins;
     });
+  };
+
+  const handleAddHeader = () => {
+    const newHeader: AssociatedAddon = {
+      id: `header-${Date.now()}`,
+      name: `Header ${headerCount}`,
+      description: "",
+      items: [],
+      profitMargin: 0,
+    };
+    setSelectedAddons((prev) => [...prev, newHeader]);
+    setHeaderCount((prev) => prev + 1);
+  };
+
+  // Drag and drop handlers for reordering add-ons
+  const handleDragStart = (index: number) => {
+    setDraggedAddonIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedAddonIndex === null || draggedAddonIndex === index) return;
+    
+    const newAddons = [...selectedAddons];
+    const draggedItem = newAddons[draggedAddonIndex];
+    newAddons.splice(draggedAddonIndex, 1);
+    newAddons.splice(index, 0, draggedItem);
+    
+    setSelectedAddons(newAddons);
+    setDraggedAddonIndex(index);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedAddonIndex(null);
   };
 
   const handleAddonProfitMarginChange = (addonId: string, value: number) => {
@@ -490,7 +531,19 @@ export default function ServicePackageSidePanel({
                             </button>
                             <button
                               onClick={() => {
-                                // TODO: Handle Header
+                                // Add header to parts/services
+                                const newHeader: PartService = {
+                                  id: `header-${Date.now()}`,
+                                  name: `Header ${headerCount}`,
+                                  description: "",
+                                  unitCost: 0,
+                                  markup: "-",
+                                  quantity: 1,
+                                  price: 0,
+                                  isCategory: true,
+                                };
+                                setPartsServices((prev) => [...prev, newHeader]);
+                                setHeaderCount((prev) => prev + 1);
                                 setShowAddPartsDropdown(false);
                               }}
                               className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
@@ -552,7 +605,7 @@ export default function ServicePackageSidePanel({
                           </button>
                           <button
                             onClick={() => {
-                              // TODO: Handle Header
+                              handleAddHeader();
                               setShowAddAddonDropdown(false);
                             }}
                             className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
@@ -936,15 +989,82 @@ export default function ServicePackageSidePanel({
                                   ) : (
                                     <IconChevronDown size={18} className="text-[#64748B]" />
                                   )}
-                                  <button 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleRemoveAddon(addon.id);
-                                    }}
-                                    className="p-1.5 text-[#94A3B8] hover:text-[#EF4444] hover:bg-[#FEF2F2] rounded-md transition-colors"
-                                  >
-                                    <IconDotsVertical size={16} />
-                                  </button>
+                                  <div className="relative">
+                                    <button 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setOpenActionMenuId(openActionMenuId === addon.id ? null : addon.id);
+                                      }}
+                                      className="p-1.5 text-[#94A3B8] hover:text-[#64748B] hover:bg-[#F1F5F9] rounded-md transition-colors"
+                                    >
+                                      <IconDotsVertical size={16} />
+                                    </button>
+                                    
+                                    {/* Action Menu Dropdown */}
+                                    {openActionMenuId === addon.id && (
+                                      <>
+                                        <div 
+                                          className="fixed inset-0 z-10" 
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setOpenActionMenuId(null);
+                                          }} 
+                                        />
+                                        <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-[#E2E8F0] rounded-lg shadow-lg z-20 py-1">
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              console.log("View Details:", addon.id);
+                                              setOpenActionMenuId(null);
+                                            }}
+                                            className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors flex items-center gap-3"
+                                          >
+                                            <IconEye size={18} className="text-[#64748B]" />
+                                            View Details
+                                          </button>
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              console.log("Edit:", addon.id);
+                                              setOpenActionMenuId(null);
+                                            }}
+                                            className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors flex items-center gap-3"
+                                          >
+                                            <IconEdit size={18} className="text-[#64748B]" />
+                                            Edit
+                                          </button>
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              // Clone the addon
+                                              const clonedAddon: AssociatedAddon = {
+                                                ...addon,
+                                                id: `${addon.id}-clone-${Date.now()}`,
+                                                name: `${addon.name} (Copy)`,
+                                              };
+                                              setSelectedAddons((prev) => [...prev, clonedAddon]);
+                                              setOpenActionMenuId(null);
+                                            }}
+                                            className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors flex items-center gap-3"
+                                          >
+                                            <IconCopy size={18} className="text-[#64748B]" />
+                                            Clone
+                                          </button>
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleRemoveAddon(addon.id);
+                                              setOpenActionMenuId(null);
+                                            }}
+                                            className="w-full px-4 py-2.5 text-left text-sm text-[#EF4444] hover:bg-[#FEF2F2] transition-colors flex items-center gap-3"
+                                          >
+                                            <IconTrash size={18} className="text-[#EF4444]" />
+                                            Remove
+                                          </button>
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </button>
@@ -971,11 +1091,14 @@ export default function ServicePackageSidePanel({
                                       <th className="px-4 py-2.5 text-right text-xs font-medium text-[#64748B] w-28">
                                         Price
                                       </th>
+                                      <th className="px-4 py-2.5 text-center text-xs font-medium text-[#64748B] w-16">
+                                        Actions
+                                      </th>
                                     </tr>
                                   </thead>
                                   <tbody className="divide-y divide-[#F1F5F9]">
                                     {addon.items.map((item) => (
-                                      <tr key={item.id} className="hover:bg-[#F8FAFC]">
+                                      <tr key={item.id} className="hover:bg-[#F8FAFC] group">
                                         <td className="px-4 py-3">
                                           <IconGripVertical size={14} className="text-[#CBD5E1] cursor-grab" />
                                         </td>
@@ -1003,6 +1126,105 @@ export default function ServicePackageSidePanel({
                                           <span className="text-sm font-medium text-[#1E293B]">
                                             ${(item.price * item.quantity).toFixed(2)}
                                           </span>
+                                        </td>
+                                        <td className="px-4 py-3 text-center">
+                                          <div className="relative inline-block">
+                                            <button
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setOpenActionMenuId(openActionMenuId === item.id ? null : item.id);
+                                              }}
+                                              className="p-1.5 text-[#94A3B8] hover:text-[#64748B] hover:bg-[#F1F5F9] rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                                            >
+                                              <IconDotsVertical size={16} />
+                                            </button>
+                                            
+                                            {/* Item Action Menu Dropdown */}
+                                            {openActionMenuId === item.id && (
+                                              <>
+                                                <div 
+                                                  className="fixed inset-0 z-10" 
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setOpenActionMenuId(null);
+                                                  }} 
+                                                />
+                                                <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-[#E2E8F0] rounded-lg shadow-lg z-20 py-1">
+                                                  <button
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      console.log("View Details:", item.id);
+                                                      setOpenActionMenuId(null);
+                                                    }}
+                                                    className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors flex items-center gap-3"
+                                                  >
+                                                    <IconEye size={18} className="text-[#64748B]" />
+                                                    View Details
+                                                  </button>
+                                                  <button
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      console.log("Edit:", item.id);
+                                                      setOpenActionMenuId(null);
+                                                    }}
+                                                    className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors flex items-center gap-3"
+                                                  >
+                                                    <IconEdit size={18} className="text-[#64748B]" />
+                                                    Edit
+                                                  </button>
+                                                  <button
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      // Clone the item within the addon
+                                                      setSelectedAddons((prev) =>
+                                                        prev.map((a) =>
+                                                          a.id === addon.id
+                                                            ? {
+                                                                ...a,
+                                                                items: [
+                                                                  ...a.items,
+                                                                  {
+                                                                    ...item,
+                                                                    id: `${item.id}-clone-${Date.now()}`,
+                                                                    name: `${item.name} (Copy)`,
+                                                                  },
+                                                                ],
+                                                              }
+                                                            : a
+                                                        )
+                                                      );
+                                                      setOpenActionMenuId(null);
+                                                    }}
+                                                    className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors flex items-center gap-3"
+                                                  >
+                                                    <IconCopy size={18} className="text-[#64748B]" />
+                                                    Clone
+                                                  </button>
+                                                  <button
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      // Remove item from the addon
+                                                      setSelectedAddons((prev) =>
+                                                        prev.map((a) =>
+                                                          a.id === addon.id
+                                                            ? {
+                                                                ...a,
+                                                                items: a.items.filter((i) => i.id !== item.id),
+                                                              }
+                                                            : a
+                                                        )
+                                                      );
+                                                      setOpenActionMenuId(null);
+                                                    }}
+                                                    className="w-full px-4 py-2.5 text-left text-sm text-[#EF4444] hover:bg-[#FEF2F2] transition-colors flex items-center gap-3"
+                                                  >
+                                                    <IconTrash size={18} className="text-[#EF4444]" />
+                                                    Remove
+                                                  </button>
+                                                </div>
+                                              </>
+                                            )}
+                                          </div>
                                         </td>
                                       </tr>
                                     ))}
@@ -1109,13 +1331,21 @@ export default function ServicePackageSidePanel({
             }));
             setPartsServices([...partsServices, ...newItems]);
           } else {
-            // Add selected groups as add-ons
+            // Add selected groups as add-ons with their items
             groups.forEach((group) => {
               const newAddon: AssociatedAddon = {
                 id: `addon-group-${group.id}-${Date.now()}`,
                 name: group.name,
                 description: group.description || `${group.totalItems} items`,
-                items: [], // Groups start with no items, they'll be loaded
+                items: group.items.map((item) => ({
+                  id: `${item.id}-${Date.now()}`,
+                  name: item.name,
+                  description: item.description,
+                  unitCost: item.unitCost,
+                  markup: item.markup,
+                  quantity: item.quantity,
+                  price: item.price,
+                })),
                 profitMargin: 25,
               };
               setSelectedAddons((prev) => [...prev, newAddon]);
