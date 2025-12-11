@@ -862,7 +862,7 @@ export default function ServicePackageSidePanel({
                       </p>
                       <button 
                         onClick={() => setShowAddAddonDropdown(true)}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-[#7C3AED] text-white rounded-md text-sm font-medium hover:bg-[#6D28D9] transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-2 bg-white border border-[#E2E8F0] rounded-md text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] transition-colors"
                       >
                         <IconPlus size={16} stroke={2} />
                         Add Add-on
