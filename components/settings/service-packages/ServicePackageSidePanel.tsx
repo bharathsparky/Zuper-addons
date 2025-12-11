@@ -17,6 +17,7 @@ import {
   IconDotsVertical,
 } from "@tabler/icons-react";
 import ChooseLineItemModal from "./ChooseLineItemModal";
+import ChooseGroupModal from "./ChooseGroupModal";
 
 interface PartService {
   id: string;
@@ -201,6 +202,7 @@ export default function ServicePackageSidePanel({
   // Parts & Services Add dropdown and modal
   const [showAddPartsDropdown, setShowAddPartsDropdown] = useState(false);
   const [showLineItemModal, setShowLineItemModal] = useState(false);
+  const [showGroupModal, setShowGroupModal] = useState(false);
 
   const data = packageData || mockPackageData;
 
@@ -470,7 +472,7 @@ export default function ServicePackageSidePanel({
                             </button>
                             <button
                               onClick={() => {
-                                // TODO: Handle Group
+                                setShowGroupModal(true);
                                 setShowAddPartsDropdown(false);
                               }}
                               className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
@@ -530,7 +532,7 @@ export default function ServicePackageSidePanel({
                           </button>
                           <button
                             onClick={() => {
-                              // TODO: Handle Group
+                              setShowGroupModal(true);
                               setShowAddAddonDropdown(false);
                             }}
                             className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
@@ -1052,6 +1054,27 @@ export default function ServicePackageSidePanel({
         isOpen={showLineItemModal}
         onClose={() => setShowLineItemModal(false)}
         onAdd={handleAddLineItems}
+      />
+
+      {/* Choose Group Modal */}
+      <ChooseGroupModal
+        isOpen={showGroupModal}
+        onClose={() => setShowGroupModal(false)}
+        onAdd={(groups) => {
+          // Add selected groups as items to the parts/services list
+          const newItems = groups.flatMap((group) => ({
+            id: `group-${group.id}-${Date.now()}`,
+            name: group.name,
+            description: group.description || `${group.totalItems} items`,
+            unitCost: 0,
+            markup: "-",
+            quantity: 1,
+            price: 0,
+            isCategory: true,
+          }));
+          setPartsServices([...partsServices, ...newItems]);
+          setShowGroupModal(false);
+        }}
       />
     </div>
   );
