@@ -6,12 +6,13 @@ import {
   IconChevronRight,
 } from "@tabler/icons-react";
 import ProposalTemplatesTab from "./ProposalTemplatesTab";
-import AddonsTab from "./settings/addons/AddonsTab";
+// Add-ons master removed - using Product Groups instead
+// import AddonsTab from "./settings/addons/AddonsTab";
 import FormsTab from "./settings/authorization-forms/FormsTab";
 import FormBuilder from "./settings/authorization-forms/FormBuilder";
 import ServicePackagesTab from "./settings/service-packages/ServicePackagesTab";
 
-type TabId = "proposal-templates" | "formula-library" | "service-packages" | "addons" | "authorization-forms";
+type TabId = "proposal-templates" | "formula-library" | "service-packages" | "authorization-forms";
 
 interface Tab {
   id: TabId;
@@ -22,7 +23,8 @@ const tabs: Tab[] = [
   { id: "proposal-templates", label: "Proposal Templates" },
   { id: "formula-library", label: "Formula Library" },
   { id: "service-packages", label: "Service Packages" },
-  { id: "addons", label: "Add-ons" },
+  // Add-ons master removed - using Product Groups instead
+  // { id: "addons", label: "Add-ons" },
   { id: "authorization-forms", label: "Authorization Forms" },
 ];
 
@@ -83,7 +85,7 @@ export default function ZuperIQSettings() {
           </div>
         )}
         {activeTab === "service-packages" && <ServicePackagesTab />}
-        {activeTab === "addons" && <AddonsTab />}
+        {/* Add-ons master removed - using Product Groups instead */}
         {activeTab === "authorization-forms" && (
           <FormsTab onEditForm={(formId) => setEditingFormId(formId)} />
         )}

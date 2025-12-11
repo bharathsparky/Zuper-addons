@@ -468,53 +468,75 @@ export default function ServicePackageSidePanel({
                             >
                               Header
                             </button>
+                            <button
+                              onClick={() => {
+                                // TODO: Handle Group
+                                setShowAddPartsDropdown(false);
+                              }}
+                              className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
+                            >
+                              Group
+                            </button>
                           </div>
                         </>
                       )}
                     </div>
                   </>
                 )}
-                {activeRightTab === "addons" && selectedAddons.length === 0 && (
+                {activeRightTab === "addons" && (
                   <div className="relative">
                     <button 
                       onClick={() => setShowAddAddonDropdown(!showAddAddonDropdown)}
                       className="flex items-center gap-1.5 px-3 py-2 bg-white border border-[#E2E8F0] rounded-md text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] transition-colors"
                     >
                       <IconPlus size={16} stroke={2} />
-                      Add Add-on
+                      Add
                     </button>
                     
-                    {/* Add Add-on Dropdown */}
+                    {/* Add Add-on Dropdown - Same as Parts & Services */}
                     {showAddAddonDropdown && (
                       <>
                         <div 
                           className="fixed inset-0 z-10" 
                           onClick={() => setShowAddAddonDropdown(false)} 
                         />
-                        <div className="absolute right-0 top-full mt-1 w-72 bg-white border border-[#E2E8F0] rounded-lg shadow-lg z-20 max-h-64 overflow-auto">
-                          {availableAddons.length > 0 ? (
-                            availableAddons.map((addon) => (
-                              <button
-                                key={addon.id}
-                                onClick={() => handleAddAddon(addon)}
-                                className="w-full px-4 py-3 text-left hover:bg-[#F8FAFC] transition-colors border-b border-[#F1F5F9] last:border-0"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <div className="w-8 h-8 rounded-md bg-[#EDE9FE] flex items-center justify-center">
-                                    <IconPuzzle size={14} className="text-[#7C3AED]" />
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-[#1E293B]">{addon.name}</p>
-                                    <p className="text-xs text-[#64748B]">{addon.items.length} items</p>
-                                  </div>
-                                </div>
-                              </button>
-                            ))
-                          ) : (
-                            <div className="px-4 py-3 text-sm text-[#64748B] text-center">
-                              No add-ons available
-                            </div>
-                          )}
+                        <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-[#E2E8F0] rounded-lg shadow-lg z-20 py-1">
+                          <button
+                            onClick={() => {
+                              setShowLineItemModal(true);
+                              setShowAddAddonDropdown(false);
+                            }}
+                            className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
+                          >
+                            Line Item
+                          </button>
+                          <button
+                            onClick={() => {
+                              // TODO: Handle Bundle
+                              setShowAddAddonDropdown(false);
+                            }}
+                            className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
+                          >
+                            Bundle
+                          </button>
+                          <button
+                            onClick={() => {
+                              // TODO: Handle Header
+                              setShowAddAddonDropdown(false);
+                            }}
+                            className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
+                          >
+                            Header
+                          </button>
+                          <button
+                            onClick={() => {
+                              // TODO: Handle Group
+                              setShowAddAddonDropdown(false);
+                            }}
+                            className="w-full px-4 py-2.5 text-left text-sm text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
+                          >
+                            Group
+                          </button>
                         </div>
                       </>
                     )}
