@@ -564,6 +564,13 @@ export default function ServicePackageSidePanel({
                           />
                         </div>
                         <p className="text-base font-semibold text-[#1E293B]">Add Parts / Services</p>
+                        <button
+                          onClick={() => setShowAddPartsDropdown(true)}
+                          className="mt-4 flex items-center gap-1.5 px-3 py-2 bg-white border border-[#E2E8F0] rounded-md text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] transition-colors"
+                        >
+                          <IconPlus size={16} stroke={2} />
+                          Add
+                        </button>
                       </div>
                     ) : (
                       <table className="w-full">
