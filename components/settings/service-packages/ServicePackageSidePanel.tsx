@@ -203,6 +203,7 @@ export default function ServicePackageSidePanel({
   const [showAddPartsDropdown, setShowAddPartsDropdown] = useState(false);
   const [showLineItemModal, setShowLineItemModal] = useState(false);
   const [showGroupModal, setShowGroupModal] = useState(false);
+  const [addingToTab, setAddingToTab] = useState<"parts-services" | "addons">("parts-services");
 
   const data = packageData || mockPackageData;
 
@@ -250,17 +251,42 @@ export default function ServicePackageSidePanel({
   };
 
   const handleAddLineItems = (items: any[]) => {
-    const newParts: PartService[] = items.map((item) => ({
-      id: item.id,
-      name: `${item.code} - ${item.name}`,
-      description: item.category,
-      image: item.image,
-      unitCost: item.unitCost,
-      markup: item.markup || "-",
-      quantity: item.quantity || 1,
-      price: item.sellingPrice,
-    }));
-    setPartsServices((prev) => [...prev, ...newParts]);
+    if (addingToTab === "parts-services") {
+      const newParts: PartService[] = items.map((item) => ({
+        id: item.id,
+        name: `${item.code} - ${item.name}`,
+        description: item.category,
+        image: item.image,
+        unitCost: item.unitCost,
+        markup: item.markup || "-",
+        quantity: item.quantity || 1,
+        price: item.sellingPrice,
+      }));
+      setPartsServices((prev) => [...prev, ...newParts]);
+    } else {
+      // Adding to Add-ons tab - create a new add-on entry with the selected items
+      const newAddonItems: AddonItem[] = items.map((item) => ({
+        id: item.id,
+        name: `${item.code} - ${item.name}`,
+        description: item.category,
+        image: item.image,
+        unitCost: item.unitCost,
+        markup: item.markup || "-",
+        quantity: item.quantity || 1,
+        price: item.sellingPrice,
+      }));
+      
+      const newAddon: AssociatedAddon = {
+        id: `addon-${Date.now()}`,
+        name: items.length === 1 ? items[0].name : `Add-on Package (${items.length} items)`,
+        description: items.length === 1 ? items[0].category : "Custom add-on package",
+        items: newAddonItems,
+        profitMargin: 25,
+      };
+      
+      setSelectedAddons((prev) => [...prev, newAddon]);
+      setExpandedAddons((prev) => ({ ...prev, [newAddon.id]: true }));
+    }
     setShowLineItemModal(false);
   };
 
@@ -445,6 +471,7 @@ export default function ServicePackageSidePanel({
                           <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-[#E2E8F0] rounded-lg shadow-lg z-20 py-1">
                             <button
                               onClick={() => {
+                                setAddingToTab("parts-services");
                                 setShowLineItemModal(true);
                                 setShowAddPartsDropdown(false);
                               }}
@@ -472,6 +499,7 @@ export default function ServicePackageSidePanel({
                             </button>
                             <button
                               onClick={() => {
+                                setAddingToTab("parts-services");
                                 setShowGroupModal(true);
                                 setShowAddPartsDropdown(false);
                               }}
@@ -505,6 +533,7 @@ export default function ServicePackageSidePanel({
                         <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-[#E2E8F0] rounded-lg shadow-lg z-20 py-1">
                           <button
                             onClick={() => {
+                              setAddingToTab("addons");
                               setShowLineItemModal(true);
                               setShowAddAddonDropdown(false);
                             }}
@@ -532,6 +561,7 @@ export default function ServicePackageSidePanel({
                           </button>
                           <button
                             onClick={() => {
+                              setAddingToTab("addons");
                               setShowGroupModal(true);
                               setShowAddAddonDropdown(false);
                             }}
@@ -1068,18 +1098,33 @@ export default function ServicePackageSidePanel({
         isOpen={showGroupModal}
         onClose={() => setShowGroupModal(false)}
         onAdd={(groups) => {
-          // Add selected groups as items to the parts/services list
-          const newItems = groups.flatMap((group) => ({
-            id: `group-${group.id}-${Date.now()}`,
-            name: group.name,
-            description: group.description || `${group.totalItems} items`,
-            unitCost: 0,
-            markup: "-",
-            quantity: 1,
-            price: 0,
-            isCategory: true,
-          }));
-          setPartsServices([...partsServices, ...newItems]);
+          if (addingToTab === "parts-services") {
+            // Add selected groups as items to the parts/services list
+            const newItems = groups.map((group) => ({
+              id: `group-${group.id}-${Date.now()}`,
+              name: group.name,
+              description: group.description || `${group.totalItems} items`,
+              unitCost: 0,
+              markup: "-",
+              quantity: 1,
+              price: 0,
+              isCategory: true,
+            }));
+            setPartsServices([...partsServices, ...newItems]);
+          } else {
+            // Add selected groups as add-ons
+            groups.forEach((group) => {
+              const newAddon: AssociatedAddon = {
+                id: `addon-group-${group.id}-${Date.now()}`,
+                name: group.name,
+                description: group.description || `${group.totalItems} items`,
+                items: [], // Groups start with no items, they'll be loaded
+                profitMargin: 25,
+              };
+              setSelectedAddons((prev) => [...prev, newAddon]);
+              setExpandedAddons((prev) => ({ ...prev, [newAddon.id]: true }));
+            });
+          }
           setShowGroupModal(false);
         }}
       />
