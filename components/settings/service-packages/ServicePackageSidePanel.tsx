@@ -19,6 +19,7 @@ import {
   IconEdit,
   IconCopy,
   IconTrash,
+  IconCreditCard,
 } from "@tabler/icons-react";
 import ChooseLineItemModal from "./ChooseLineItemModal";
 import ChooseGroupModal from "./ChooseGroupModal";
@@ -212,6 +213,61 @@ export default function ServicePackageSidePanel({
   const [headerCount, setHeaderCount] = useState(1);
   const [draggedAddonIndex, setDraggedAddonIndex] = useState<number | null>(null);
   const [openActionMenuId, setOpenActionMenuId] = useState<string | null>(null);
+  
+  // Financing state
+  const [financingEnabled, setFinancingEnabled] = useState(false);
+  const [selectedFinancingProvider, setSelectedFinancingProvider] = useState("");
+  const [selectedFinancingPlan, setSelectedFinancingPlan] = useState("");
+  const [showFinancingDropdown, setShowFinancingDropdown] = useState(false);
+  const [showPlanSelection, setShowPlanSelection] = useState(false);
+  const [selectedProviderForPlan, setSelectedProviderForPlan] = useState<string | null>(null);
+  
+  // Mock financing providers with plans
+  const financingProviders = [
+    { 
+      id: "service-finance", 
+      name: "Service Finance", 
+      logo: "/figma-assets/service-finance-logo.svg",
+      plans: [
+        { id: "sf-1", name: "3 Year 0%", term: "3 Year", apr: "0% APR" },
+        { id: "sf-2", name: "5 Year 5%", term: "5 Year", apr: "5% APR" },
+        { id: "sf-3", name: "7 Year 8%", term: "7 Year", apr: "8% APR" },
+      ]
+    },
+    { 
+      id: "synchrony", 
+      name: "Synchrony", 
+      logo: "/figma-assets/synchrony-logo.svg",
+      plans: [
+        { id: "sync-1", name: "5 Year 10%", term: "5 Year", apr: "10% APR" },
+        { id: "sync-2", name: "5 Year 10%", term: "5 Year", apr: "10% APR" },
+      ]
+    },
+    { 
+      id: "test", 
+      name: "Test", 
+      logo: "",
+      plans: [
+        { id: "test-1", name: "2 Year 5%", term: "2 Year", apr: "5% APR" },
+        { id: "test-2", name: "3 Year 7%", term: "3 Year", apr: "7% APR" },
+      ]
+    },
+    { 
+      id: "tesr", 
+      name: "tesr", 
+      logo: "",
+      plans: [
+        { id: "tesr-1", name: "1 Year 3%", term: "1 Year", apr: "3% APR" },
+      ]
+    },
+  ];
+
+  const getSelectedProviderAndPlan = () => {
+    if (!selectedFinancingProvider || !selectedFinancingPlan) return null;
+    const provider = financingProviders.find(p => p.id === selectedFinancingProvider);
+    const plan = provider?.plans.find(p => p.id === selectedFinancingPlan);
+    return { provider, plan };
+  };
 
   const data = packageData || mockPackageData;
 
@@ -1017,6 +1073,257 @@ export default function ServicePackageSidePanel({
                           </div>
                         </div>
                       )}
+                    </div>
+                  )}
+
+                  {/* Financing Section - Sticky Footer */}
+                  {partsServices.length > 0 && (
+                    <div className="sticky bottom-0 bg-gradient-to-r from-slate-50 to-white border-t border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.08)] px-6 py-4 rounded-b-xl">
+                      <div className="flex items-center">
+                        {/* Left side - Icon and text */}
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="w-9 h-9 rounded-lg bg-[#FFF7ED] border border-[#FDBA74] flex items-center justify-center shrink-0">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect x="3" y="6" width="18" height="13" rx="2" stroke="#EA580C" strokeWidth="1.5"/>
+                              <path d="M3 10H21" stroke="#EA580C" strokeWidth="1.5"/>
+                              <path d="M7 15H11" stroke="#EA580C" strokeWidth="1.5" strokeLinecap="round"/>
+                            </svg>
+                          </div>
+                          <div className="min-w-0">
+                            <h4 className="text-sm font-medium text-[#1E293B] whitespace-nowrap">
+                              Financing for &quot;{name || "Good"}&quot; option
+                            </h4>
+                            <p className="text-xs text-[#64748B] whitespace-nowrap">
+                              Offer flexible payment plans for this option
+                            </p>
+                          </div>
+                        </div>
+                        
+                        {/* Vertical Divider */}
+                        <div className="h-10 w-px bg-[#E2E8F0] mx-6 shrink-0" />
+                        
+                        {/* Enable Financing Toggle - Left aligned after divider */}
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className="text-sm text-[#475569] whitespace-nowrap">Enable Financing</span>
+                          <button
+                            onClick={() => {
+                              setFinancingEnabled(!financingEnabled);
+                              if (financingEnabled) {
+                                setSelectedFinancingProvider("");
+                                setSelectedFinancingPlan("");
+                              }
+                            }}
+                            className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${
+                              financingEnabled ? 'bg-[#F97316]' : 'bg-[#E2E8F0]'
+                            }`}
+                          >
+                            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all ${
+                              financingEnabled ? 'left-6' : 'left-1'
+                            }`} />
+                          </button>
+                        </div>
+                        
+                        {/* Spacer - pushes dropdown to the right */}
+                        <div className="flex-1" />
+                        
+                        {/* Right side - Provider/Plan Dropdown */}
+                        {financingEnabled && (
+                          <div className="relative">
+                            <button
+                              onClick={() => {
+                                setShowFinancingDropdown(!showFinancingDropdown);
+                                setShowPlanSelection(false);
+                                setSelectedProviderForPlan(null);
+                              }}
+                              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-lg text-sm text-[#1E293B] hover:border-[#CBD5E1] transition-colors min-w-[240px]"
+                            >
+                              {(() => {
+                                const selection = getSelectedProviderAndPlan();
+                                if (selection?.provider && selection?.plan) {
+                                  return (
+                                    <>
+                                      {selection.provider.logo ? (
+                                        <img src={selection.provider.logo} alt={selection.provider.name} className="w-5 h-5 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                                      ) : (
+                                        <span className="text-xs text-[#64748B] italic">{selection.provider.name.substring(0, 4)}</span>
+                                      )}
+                                      <span className="flex-1 text-left font-medium">
+                                        {selection.provider.name} • {selection.plan.term.toUpperCase()} {selection.plan.apr.replace(' APR', '')}
+                                      </span>
+                                    </>
+                                  );
+                                }
+                                return <span className="flex-1 text-left text-[#94A3B8]">Select Provider & Plan</span>;
+                              })()}
+                              <IconChevronDown size={16} className={`text-[#94A3B8] transition-transform ${showFinancingDropdown ? 'rotate-180' : ''}`} />
+                            </button>
+                            
+                            {/* Dropdown */}
+                            {showFinancingDropdown && (
+                              <>
+                                <div 
+                                  className="fixed inset-0 z-10" 
+                                  onClick={() => {
+                                    setShowFinancingDropdown(false);
+                                    setShowPlanSelection(false);
+                                    setSelectedProviderForPlan(null);
+                                  }} 
+                                />
+                                <div className="absolute right-0 bottom-full mb-2 w-[320px] bg-white border border-[#E2E8F0] rounded-xl shadow-xl z-20 overflow-hidden">
+                                  {!showPlanSelection ? (
+                                    /* Provider List */
+                                    <div className="py-2">
+                                      {financingProviders.map((provider) => (
+                                        <button
+                                          key={provider.id}
+                                          onClick={() => {
+                                            setSelectedProviderForPlan(provider.id);
+                                            setShowPlanSelection(true);
+                                          }}
+                                          className="w-full px-4 py-3 text-left hover:bg-[#F8FAFC] transition-colors flex items-center gap-3 group"
+                                        >
+                                          <div className="w-10 h-10 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center overflow-hidden">
+                                            {provider.logo ? (
+                                              <img src={provider.logo} alt={provider.name} className="w-6 h-6 object-contain" onError={(e) => { 
+                                                e.currentTarget.style.display = 'none'; 
+                                                (e.currentTarget.nextSibling as HTMLElement)?.classList.remove('hidden');
+                                              }} />
+                                            ) : null}
+                                            <span className={`text-xs text-[#64748B] font-medium ${provider.logo ? 'hidden' : ''}`}>
+                                              {provider.name.substring(0, 2).toUpperCase()}
+                                            </span>
+                                          </div>
+                                          <div className="flex-1">
+                                            <p className="text-sm font-medium text-[#1E293B]">{provider.name}</p>
+                                            <p className="text-xs text-[#64748B]">{provider.plans.length} plans</p>
+                                          </div>
+                                          <IconChevronDown size={16} className="text-[#94A3B8] -rotate-90" />
+                                        </button>
+                                      ))}
+                                      
+                                      {/* Selected Value Display */}
+                                      {selectedFinancingProvider && selectedFinancingPlan && (
+                                        <div className="border-t border-[#E2E8F0] mt-2 pt-3 px-4 pb-3">
+                                          <div className="flex items-center gap-2 px-3 py-2 bg-[#F8FAFC] rounded-lg border border-[#E2E8F0]">
+                                            {(() => {
+                                              const selection = getSelectedProviderAndPlan();
+                                              if (selection?.provider && selection?.plan) {
+                                                return (
+                                                  <>
+                                                    {selection.provider.logo ? (
+                                                      <img src={selection.provider.logo} alt={selection.provider.name} className="w-4 h-4 object-contain" />
+                                                    ) : (
+                                                      <span className="text-xs text-[#64748B]">{selection.provider.name.substring(0, 4)}</span>
+                                                    )}
+                                                    <span className="text-sm text-[#1E293B]">
+                                                      {selection.provider.name} • {selection.plan.term.toUpperCase()} {selection.plan.apr.replace(' APR', '')}
+                                                    </span>
+                                                  </>
+                                                );
+                                              }
+                                              return null;
+                                            })()}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    /* Plan Selection */
+                                    <div>
+                                      {/* Header with back button */}
+                                      <div className="flex items-center gap-3 px-4 py-3 border-b border-[#E2E8F0]">
+                                        <button
+                                          onClick={() => {
+                                            setShowPlanSelection(false);
+                                            setSelectedProviderForPlan(null);
+                                          }}
+                                          className="p-1 hover:bg-[#F1F5F9] rounded transition-colors"
+                                        >
+                                          <IconArrowLeft size={16} className="text-[#64748B]" />
+                                        </button>
+                                        {(() => {
+                                          const provider = financingProviders.find(p => p.id === selectedProviderForPlan);
+                                          return (
+                                            <div className="flex items-center gap-2">
+                                              {provider?.logo ? (
+                                                <img src={provider.logo} alt={provider.name} className="w-5 h-5 object-contain" />
+                                              ) : (
+                                                <span className="text-xs text-[#64748B]">{provider?.name.substring(0, 4)}</span>
+                                              )}
+                                              <span className="text-sm font-medium text-[#1E293B]">{provider?.name}</span>
+                                            </div>
+                                          );
+                                        })()}
+                                      </div>
+                                      
+                                      {/* Plans list */}
+                                      <div className="py-2">
+                                        {financingProviders
+                                          .find(p => p.id === selectedProviderForPlan)
+                                          ?.plans.map((plan) => (
+                                            <button
+                                              key={plan.id}
+                                              onClick={() => {
+                                                setSelectedFinancingProvider(selectedProviderForPlan!);
+                                                setSelectedFinancingPlan(plan.id);
+                                                setShowFinancingDropdown(false);
+                                                setShowPlanSelection(false);
+                                                setSelectedProviderForPlan(null);
+                                              }}
+                                              className="w-full px-4 py-3 text-left hover:bg-[#F8FAFC] transition-colors flex items-center gap-3"
+                                            >
+                                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                                selectedFinancingProvider === selectedProviderForPlan && selectedFinancingPlan === plan.id
+                                                  ? 'border-[#F97316]'
+                                                  : 'border-[#CBD5E1]'
+                                              }`}>
+                                                {selectedFinancingProvider === selectedProviderForPlan && selectedFinancingPlan === plan.id && (
+                                                  <div className="w-2.5 h-2.5 rounded-full bg-[#F97316]" />
+                                                )}
+                                              </div>
+                                              <div className="flex-1">
+                                                <p className="text-sm font-medium text-[#1E293B]">{plan.name}</p>
+                                                <p className="text-xs text-[#64748B]">
+                                                  {plan.term} <span className="text-[#CBD5E1] mx-1">•</span> {plan.apr}
+                                                </p>
+                                              </div>
+                                            </button>
+                                          ))}
+                                      </div>
+                                      
+                                      {/* Selected Value Display */}
+                                      {selectedFinancingProvider === selectedProviderForPlan && selectedFinancingPlan && (
+                                        <div className="border-t border-[#E2E8F0] px-4 py-3">
+                                          <div className="flex items-center gap-2 px-3 py-2 bg-[#F8FAFC] rounded-lg border border-[#E2E8F0]">
+                                            {(() => {
+                                              const selection = getSelectedProviderAndPlan();
+                                              if (selection?.provider && selection?.plan) {
+                                                return (
+                                                  <>
+                                                    {selection.provider.logo ? (
+                                                      <img src={selection.provider.logo} alt={selection.provider.name} className="w-4 h-4 object-contain" />
+                                                    ) : (
+                                                      <span className="text-xs text-[#64748B]">{selection.provider.name.substring(0, 4)}</span>
+                                                    )}
+                                                    <span className="text-sm text-[#1E293B]">
+                                                      {selection.provider.name} • {selection.plan.term.toUpperCase()} {selection.plan.apr.replace(' APR', '')}
+                                                    </span>
+                                                  </>
+                                                );
+                                              }
+                                              return null;
+                                            })()}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </>
