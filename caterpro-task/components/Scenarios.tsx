@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight, DollarSign, Settings, LineChart, User, Building, AlertCircle } from 'lucide-react'
+import { DollarSign, Settings, LineChart, User, Building, HelpCircle, Lightbulb } from 'lucide-react'
 import { AnimatedSection, Container, SectionHeader, Badge } from './ui'
 
 const scenarios = [
@@ -284,7 +284,7 @@ export function Scenarios() {
               {/* Right column - Considerations */}
               <div>
                 <h4 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4" />
+                  <HelpCircle className="w-4 h-4" />
                   Design considerations
                 </h4>
                 <p className="text-sm text-foreground-muted mb-4">
@@ -299,7 +299,7 @@ export function Scenarios() {
                       transition={{ delay: 0.15 * i }}
                       className="flex items-start gap-3 p-4 bg-background-secondary rounded-xl border border-border"
                     >
-                      <ChevronRight className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                      <Lightbulb className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
                       <span className="text-foreground">{consideration}</span>
                     </motion.li>
                   ))}
