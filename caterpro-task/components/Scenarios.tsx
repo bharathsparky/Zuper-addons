@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight, DollarSign, Settings, LineChart } from 'lucide-react'
+import { ChevronRight, DollarSign, Settings, LineChart, User, Building, AlertCircle } from 'lucide-react'
 import { AnimatedSection, Container, SectionHeader, Badge } from './ui'
 
 const scenarios = [
@@ -12,16 +12,26 @@ const scenarios = [
     title: 'Event Profitability View',
     tag: 'Core Experience',
     tagVariant: 'primary' as const,
-    description: 'The business owner wants to see how profitable a completed event was.',
+    userStory: 'As a business owner, I want to see how profitable a completed event was so I can understand my true margins and make better pricing decisions for future events.',
+    context: 'After an event is completed, the owner needs a clear breakdown of all the money that came in versus all the money that went out. Currently, they use spreadsheets and often miss hidden costs, leading to inaccurate profit calculations.',
+    persona: {
+      name: 'Sarah Chen',
+      role: 'Owner, Delicious Catering Co.',
+      quote: 'I thought the Johnson wedding was our best event this year, but after accounting for the last-minute ice sculpture and overtime staff, we barely broke even.'
+    },
     needs: [
-      'Revenue vs. all costs (labor, food, rentals, vendors, travel)',
-      'Final margin calculation',
-      'Comparison to estimates vs. actuals',
+      'Total revenue collected from the client (deposits, final payment, add-ons)',
+      'All costs itemized: labor (regular & overtime), food & beverages, equipment rentals, vendor subcontracts, transportation, permits & fees',
+      'Gross profit and profit margin percentage',
+      'Comparison: What we quoted vs. what we actually spent',
+      'Timeline of when costs were incurred (to spot patterns)',
     ],
+    realWorldExample: 'A corporate holiday party was quoted at $15,000 with an estimated 35% margin. But the client added a dessert station (+$800), the venue required extra staff (+$600), and the rental company charged rush delivery (+$200). The owner needs to see all this clearly.',
     considerations: [
-      'How do you present complex financial data clearly?',
-      'What comparisons or benchmarks might be useful?',
-      'How do you handle events that went over budget?',
+      'How do you present complex financial data without overwhelming the user?',
+      'What visual indicators help users quickly spot problems (over budget, low margin)?',
+      'How do you show the story of an event — from quote to final profit?',
+      'What drill-down capabilities are needed to investigate specific costs?',
     ],
   },
   {
@@ -30,17 +40,26 @@ const scenarios = [
     title: 'Commission Configuration & Tracking',
     tag: 'System Design',
     tagVariant: 'accent' as const,
-    description: 'CaterPro clients have different commission structures.',
+    userStory: 'As an admin, I want to set up different commission structures for my team so that everyone is compensated fairly based on their role and performance.',
+    context: 'Catering companies have diverse team structures. Sales reps bring in clients, coordinators manage events, and team leads oversee multiple staff. Each role may have different compensation models — percentage of revenue, flat fees, bonuses for ratings, or overrides on their team\'s work.',
+    persona: {
+      name: 'Marcus Williams',
+      role: 'Operations Manager',
+      quote: 'Every month I spend hours in Excel calculating commissions. Our senior coordinator gets a different rate than juniors, our sales guy wants 5% of any client he brings in forever, and now we have team leads wanting overrides.'
+    },
     examples: [
-      'Sales rep: 5% of event revenue',
-      'Event coordinator: $150 flat + 2% bonus if client rates 4+ stars',
-      'Senior coordinators: Higher rates than junior',
-      'Team leads: Override on team members\' events',
+      'Sales rep: 5% of event revenue for any client they originally brought in',
+      'Junior coordinator: $100 flat per event managed',
+      'Senior coordinator: $150 flat + 2% of event revenue if client rates 4+ stars',
+      'Team lead: 1% override on all events their team members coordinate',
+      'Referral bonus: $50 for any team member who refers a new hire that stays 90 days',
     ],
+    realWorldExample: 'For a $20,000 wedding: The sales rep who landed the client 2 years ago gets $1,000 (5%). The senior coordinator who managed it gets $150 + $400 bonus (client rated 5 stars). The team lead gets $200 override. Total commissions: $1,750.',
     considerations: [
-      'How are commission rules configured? (admin experience)',
-      'How do team members see their earnings? (employee experience)',
-      'How do you handle disputes or adjustments?',
+      'How do admins create and modify commission rules without needing IT support?',
+      'How do employees view their pending and paid commissions transparently?',
+      'How do you handle edge cases: disputed amounts, retroactive adjustments, split commissions?',
+      'What approval workflows might be needed before commissions are finalized?',
     ],
   },
   {
@@ -49,18 +68,28 @@ const scenarios = [
     title: 'Profitability Dashboard',
     tag: 'Analytics & Insights',
     tagVariant: 'primary' as const,
-    description: 'The owner wants a dashboard showing profitability trends.',
+    userStory: 'As a business owner, I want to see profitability trends across my business so I can identify what\'s working, what\'s not, and where to focus my efforts.',
+    context: 'Business owners need the big picture. They want to know if they\'re making more money this year than last, which types of events they should pursue more aggressively, and which clients are actually worth keeping. This requires aggregating data across many events and time periods.',
+    persona: {
+      name: 'David Park',
+      role: 'CEO, Elite Events Catering',
+      quote: 'We did $2M in revenue last year but I have no idea if weddings or corporate events made us more money. I also suspect we have a few clients who always go over scope but I can\'t prove it.'
+    },
     questions: [
-      'Which event types are most profitable?',
-      'Which clients bring the best margins?',
-      'Are we more profitable this quarter vs. last?',
-      'How much did we pay in commissions this month?',
-      'Where are we losing money?',
+      'Which event types (weddings, corporate, private parties) have the best margins?',
+      'Who are my top 10 most profitable clients? Who are my worst?',
+      'Are we more profitable this quarter compared to last quarter? Last year?',
+      'How much total commission did we pay out this month? This year?',
+      'Which cost categories are growing faster than revenue?',
+      'Are there seasonal patterns in our profitability?',
     ],
+    realWorldExample: 'The dashboard reveals that while weddings bring 60% of revenue, corporate events have 40% margins vs. weddings at 25%. One "whale" client that seems important actually has negative margin due to constant changes. The owner can now make strategic decisions.',
     considerations: [
-      'What\'s the right level of detail vs. overview?',
-      'How do you make insights actionable?',
-      'What filters or drill-downs are needed?',
+      'What\'s the right balance between high-level summary and detailed drill-downs?',
+      'How do you make data insights actionable — not just interesting?',
+      'What time period comparisons are most valuable (MoM, QoQ, YoY)?',
+      'How do you handle data visualization for non-technical business owners?',
+      'What alerts or anomaly detection might proactively surface issues?',
     ],
   },
 ]
@@ -76,7 +105,7 @@ export function Scenarios() {
       <Container className="relative z-10">
         <SectionHeader 
           title="The Scenarios" 
-          subtitle="Your design should address these three use cases"
+          subtitle="Your design should address these three use cases. Read each carefully to understand the user needs."
         />
 
         {/* Tab navigation */}
@@ -126,8 +155,8 @@ export function Scenarios() {
                     }`} />
                   })()}
                 </div>
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-center gap-3 mb-3">
                     <h3 className="text-xl md:text-2xl font-semibold">
                       {scenarios[activeScenario].title}
                     </h3>
@@ -135,21 +164,47 @@ export function Scenarios() {
                       {scenarios[activeScenario].tag}
                     </Badge>
                   </div>
-                  <p className="text-foreground-muted text-lg">
-                    {scenarios[activeScenario].description}
+                  {/* User Story */}
+                  <div className="p-4 bg-background-secondary rounded-xl border border-border mb-4">
+                    <p className="text-foreground italic">
+                      &ldquo;{scenarios[activeScenario].userStory}&rdquo;
+                    </p>
+                  </div>
+                  {/* Context */}
+                  <p className="text-foreground-muted">
+                    {scenarios[activeScenario].context}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Persona Quote */}
+            <div className="px-6 md:px-8 py-4 bg-gradient-to-r from-primary/5 to-accent/5 border-b border-border">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-foreground-muted italic mb-2">
+                    &ldquo;{scenarios[activeScenario].persona.quote}&rdquo;
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-medium text-foreground">{scenarios[activeScenario].persona.name}</span>
+                    <span className="text-foreground-muted"> — {scenarios[activeScenario].persona.role}</span>
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Content */}
-            <div className="p-6 md:p-8 grid md:grid-cols-2 gap-8">
+            <div className="p-6 md:p-8 grid lg:grid-cols-2 gap-8">
               {/* Left column - Requirements */}
-              <div>
+              <div className="space-y-6">
                 {scenarios[activeScenario].needs && (
-                  <>
-                    <h4 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-4">
-                      They need to see
+                  <div>
+                    <h4 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-primary rounded-full" />
+                      What they need to see
                     </h4>
                     <ul className="space-y-3">
                       {scenarios[activeScenario].needs.map((need, i) => (
@@ -165,13 +220,14 @@ export function Scenarios() {
                         </motion.li>
                       ))}
                     </ul>
-                  </>
+                  </div>
                 )}
 
                 {scenarios[activeScenario].examples && (
-                  <>
-                    <h4 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-4">
-                      Example structures to support
+                  <div>
+                    <h4 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-accent rounded-full" />
+                      Commission structures to support
                     </h4>
                     <ul className="space-y-3">
                       {scenarios[activeScenario].examples.map((example, i) => (
@@ -187,13 +243,14 @@ export function Scenarios() {
                         </motion.li>
                       ))}
                     </ul>
-                  </>
+                  </div>
                 )}
 
                 {scenarios[activeScenario].questions && (
-                  <>
-                    <h4 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-4">
-                      Questions the dashboard should answer
+                  <div>
+                    <h4 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-primary rounded-full" />
+                      Questions it should answer
                     </h4>
                     <ul className="space-y-3">
                       {scenarios[activeScenario].questions.map((question, i) => (
@@ -209,15 +266,30 @@ export function Scenarios() {
                         </motion.li>
                       ))}
                     </ul>
-                  </>
+                  </div>
                 )}
+
+                {/* Real World Example */}
+                <div className="p-4 bg-accent/5 rounded-xl border border-accent/20">
+                  <h4 className="text-sm font-semibold text-accent uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <Building className="w-4 h-4" />
+                    Real-world example
+                  </h4>
+                  <p className="text-sm text-foreground-muted">
+                    {scenarios[activeScenario].realWorldExample}
+                  </p>
+                </div>
               </div>
 
               {/* Right column - Considerations */}
               <div>
-                <h4 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-4">
-                  Design Considerations
+                <h4 className="text-sm font-semibold text-foreground-muted uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  Design considerations
                 </h4>
+                <p className="text-sm text-foreground-muted mb-4">
+                  Think about these questions as you design your solution:
+                </p>
                 <ul className="space-y-4">
                   {scenarios[activeScenario].considerations.map((consideration, i) => (
                     <motion.li
@@ -253,4 +325,3 @@ export function Scenarios() {
     </AnimatedSection>
   )
 }
-
