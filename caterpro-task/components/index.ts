@@ -8,4 +8,5 @@ export { Bonus } from './Bonus'
 export { Presentation } from './Presentation'
 export { Evaluation } from './Evaluation'
 export { Footer } from './Footer'
+export { AudioPlayer } from './AudioPlayer'
 
