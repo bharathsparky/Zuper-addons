@@ -5,28 +5,47 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Volume2, VolumeX, Music } from 'lucide-react'
 
 export function AudioPlayer() {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [showPrompt, setShowPrompt] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [hasInteracted, setHasInteracted] = useState(false)
+  const [showEnablePrompt, setShowEnablePrompt] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    // Hide prompt after 10 seconds
-    const timer = setTimeout(() => {
-      setShowPrompt(false)
-    }, 10000)
+    // Try to autoplay when component mounts
+    const playAudio = async () => {
+      if (audioRef.current) {
+        try {
+          await audioRef.current.play()
+          setIsPlaying(true)
+          setHasInteracted(true)
+        } catch (error) {
+          // Autoplay was prevented by browser
+          console.log('Autoplay prevented, waiting for user interaction')
+          setIsPlaying(false)
+          setShowEnablePrompt(true)
+          
+          // Hide prompt after 8 seconds
+          setTimeout(() => {
+            setShowEnablePrompt(false)
+          }, 8000)
+        }
+      }
+    }
 
-    return () => clearTimeout(timer)
+    playAudio()
   }, [])
 
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause()
+        setIsPlaying(false)
       } else {
         audioRef.current.play()
-        setShowPrompt(false)
+        setIsPlaying(true)
+        setHasInteracted(true)
+        setShowEnablePrompt(false)
       }
-      setIsPlaying(!isPlaying)
     }
   }
 
@@ -42,9 +61,9 @@ export function AudioPlayer() {
 
       {/* Floating music control */}
       <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
-        {/* Prompt tooltip */}
+        {/* Prompt tooltip - only show if autoplay was blocked */}
         <AnimatePresence>
-          {showPrompt && !isPlaying && (
+          {showEnablePrompt && !isPlaying && (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -52,7 +71,7 @@ export function AudioPlayer() {
               className="bg-card border border-border rounded-xl px-4 py-2 shadow-lg"
             >
               <p className="text-sm text-foreground-muted whitespace-nowrap">
-                🎵 Enable lo-fi music?
+                🎵 Click to enable lo-fi music
               </p>
             </motion.div>
           )}
@@ -68,6 +87,7 @@ export function AudioPlayer() {
               ? 'bg-primary text-white shadow-lg shadow-primary/30' 
               : 'bg-card border border-border text-foreground-muted hover:text-foreground hover:border-border-light'
           }`}
+          title={isPlaying ? 'Mute music' : 'Play music'}
         >
           {isPlaying ? (
             <>
@@ -131,4 +151,3 @@ export function AudioPlayer() {
     </>
   )
 }
-
