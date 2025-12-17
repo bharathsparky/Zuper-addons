@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowDown, Clock, BarChart3, Mic } from 'lucide-react'
+import { ArrowDown, Clock, BarChart3, Mic, Download } from 'lucide-react'
 import { Badge, Button, Container } from './ui'
 
 export function Hero() {
@@ -74,7 +74,8 @@ export function Hero() {
               View the Brief
               <ArrowDown className="w-4 h-4" />
             </Button>
-            <Button variant="secondary" size="lg">
+            <Button variant="secondary" size="lg" href="/task.pdf" download="UX-Design-Challenge-CaterPro.pdf">
+              <Download className="w-4 h-4" />
               Download PDF
             </Button>
           </motion.div>

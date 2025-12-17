@@ -7,6 +7,7 @@ interface ButtonProps {
   size?: 'sm' | 'md' | 'lg'
   children: React.ReactNode
   href?: string
+  download?: string | boolean
   className?: string
   onClick?: () => void
   disabled?: boolean
@@ -19,6 +20,7 @@ export function Button({
   children, 
   className = '', 
   href,
+  download,
   onClick,
   disabled,
   type = 'button'
@@ -43,6 +45,7 @@ export function Button({
     return (
       <motion.a
         href={href}
+        download={download}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         className={combinedClassName}
