@@ -37,7 +37,7 @@ export function AudioPlayer() {
         ref={audioRef}
         loop
         preload="auto"
-        src="/lofi-music.mp3"
+        src="/lofi.mp3"
       />
 
       {/* Floating music control */}
