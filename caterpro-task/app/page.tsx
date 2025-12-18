@@ -1,11 +1,11 @@
 'use client'
 
-import { Hero, Context, Challenge, Scenarios, Assumptions, Deliverables, Bonus, Presentation, Evaluation, Footer, AudioPlayer, ParticleBackground } from '@/components'
+import { Hero, Context, Challenge, Scenarios, Assumptions, Deliverables, Bonus, Presentation, Evaluation, Footer, AudioPlayer, ParticleBackground, DiscoModeProvider } from '@/components'
 import { ProgressBar } from '@/components/ProgressBar'
 
 export default function Home() {
   return (
-    <>
+    <DiscoModeProvider>
       <ParticleBackground />
       <ProgressBar />
       <AudioPlayer />
@@ -21,6 +21,6 @@ export default function Home() {
         <Evaluation />
         <Footer />
       </main>
-    </>
+    </DiscoModeProvider>
   )
 }

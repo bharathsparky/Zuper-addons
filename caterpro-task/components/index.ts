@@ -10,4 +10,5 @@ export { Evaluation } from './Evaluation'
 export { Footer } from './Footer'
 export { AudioPlayer } from './AudioPlayer'
 export { ParticleBackground } from './ParticleBackground'
+export { DiscoModeProvider, useDiscoMode } from './DiscoModeProvider'
 

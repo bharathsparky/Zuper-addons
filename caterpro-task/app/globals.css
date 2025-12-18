@@ -144,3 +144,218 @@ section {
     padding-bottom: 10rem;
   }
 }
+
+/* ===== DISCO MODE ANIMATIONS ===== */
+
+/* Disco gradient animation - cycles through rainbow */
+@keyframes disco-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-disco-gradient {
+  background-size: 400% 400%;
+  animation: disco-gradient 3s ease infinite;
+}
+
+/* Strobe effect */
+@keyframes strobe {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.03; }
+}
+
+.animate-strobe {
+  animation: strobe 0.3s ease-in-out infinite;
+}
+
+/* Rainbow text animation */
+@keyframes rainbow-text {
+  0% { color: #ff0080; text-shadow: 0 0 20px #ff0080, 0 0 40px #ff0080; }
+  14% { color: #ff7f00; text-shadow: 0 0 20px #ff7f00, 0 0 40px #ff7f00; }
+  28% { color: #ffff00; text-shadow: 0 0 20px #ffff00, 0 0 40px #ffff00; }
+  42% { color: #00ff00; text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00; }
+  57% { color: #00ffff; text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff; }
+  71% { color: #0080ff; text-shadow: 0 0 20px #0080ff, 0 0 40px #0080ff; }
+  85% { color: #ff00ff; text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff; }
+  100% { color: #ff0080; text-shadow: 0 0 20px #ff0080, 0 0 40px #ff0080; }
+}
+
+.disco-text {
+  animation: rainbow-text 2s linear infinite;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  background-clip: unset !important;
+}
+
+/* Neon glow text */
+@keyframes neon-glow {
+  0%, 100% { 
+    text-shadow: 
+      0 0 5px #fff,
+      0 0 10px #fff,
+      0 0 20px #ff00de,
+      0 0 30px #ff00de,
+      0 0 40px #ff00de;
+  }
+  50% { 
+    text-shadow: 
+      0 0 10px #fff,
+      0 0 20px #fff,
+      0 0 30px #00ffff,
+      0 0 40px #00ffff,
+      0 0 50px #00ffff;
+  }
+}
+
+.neon-glow {
+  animation: neon-glow 1.5s ease-in-out infinite;
+}
+
+/* Disco ball light rays */
+@keyframes disco-rays-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.disco-rays {
+  background: 
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(255,255,255,0.15) 10deg,
+      transparent 20deg,
+      transparent 30deg,
+      rgba(255,0,255,0.1) 40deg,
+      transparent 50deg,
+      transparent 60deg,
+      rgba(0,255,255,0.1) 70deg,
+      transparent 80deg,
+      transparent 90deg,
+      rgba(255,255,0,0.1) 100deg,
+      transparent 110deg,
+      transparent 120deg,
+      rgba(0,255,0,0.1) 130deg,
+      transparent 140deg,
+      transparent 150deg,
+      rgba(255,0,128,0.1) 160deg,
+      transparent 170deg,
+      transparent 180deg,
+      rgba(255,128,0,0.1) 190deg,
+      transparent 200deg,
+      transparent 210deg,
+      rgba(128,0,255,0.1) 220deg,
+      transparent 230deg,
+      transparent 240deg,
+      rgba(0,128,255,0.1) 250deg,
+      transparent 260deg,
+      transparent 270deg,
+      rgba(255,255,255,0.15) 280deg,
+      transparent 290deg,
+      transparent 300deg,
+      rgba(255,0,255,0.1) 310deg,
+      transparent 320deg,
+      transparent 330deg,
+      rgba(0,255,255,0.1) 340deg,
+      transparent 350deg,
+      transparent 360deg
+    );
+  animation: disco-rays-rotate 10s linear infinite;
+}
+
+/* Bouncing disco elements */
+@keyframes bounce-disco {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.05); }
+}
+
+.disco-bounce {
+  animation: bounce-disco 0.5s ease-in-out infinite;
+}
+
+/* Color shifting border */
+@keyframes border-disco {
+  0% { border-color: #ff0080; box-shadow: 0 0 20px #ff0080, inset 0 0 10px rgba(255,0,128,0.2); }
+  25% { border-color: #00ff00; box-shadow: 0 0 20px #00ff00, inset 0 0 10px rgba(0,255,0,0.2); }
+  50% { border-color: #00ffff; box-shadow: 0 0 20px #00ffff, inset 0 0 10px rgba(0,255,255,0.2); }
+  75% { border-color: #ff00ff; box-shadow: 0 0 20px #ff00ff, inset 0 0 10px rgba(255,0,255,0.2); }
+  100% { border-color: #ff0080; box-shadow: 0 0 20px #ff0080, inset 0 0 10px rgba(255,0,128,0.2); }
+}
+
+.disco-border {
+  border: 2px solid;
+  animation: border-disco 2s linear infinite;
+}
+
+/* Floating emoji animation */
+@keyframes float-up {
+  0% { 
+    transform: translateY(100vh) rotate(0deg) scale(0); 
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(90vh) rotate(36deg) scale(1);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(-100px) rotate(360deg) scale(0.5); 
+    opacity: 0;
+  }
+}
+
+.animate-float-up {
+  animation: float-up 8s ease-out forwards;
+}
+
+/* Slow spin for disco balls */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* Disco mode cursor */
+.disco-mode {
+  cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 100 100"><text y="80" font-size="80">🪩</text></svg>') 16 16, auto;
+}
+
+/* Pulsing glow for elements */
+@keyframes pulse-disco {
+  0%, 100% { 
+    box-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+  }
+  50% { 
+    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor, 0 0 40px currentColor;
+  }
+}
+
+.disco-pulse {
+  animation: pulse-disco 1s ease-in-out infinite;
+}
+
+/* Shake animation for extra fun */
+@keyframes shake-disco {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-2px) rotate(-1deg); }
+  75% { transform: translateX(2px) rotate(1deg); }
+}
+
+.disco-shake {
+  animation: shake-disco 0.3s ease-in-out infinite;
+}
+
+/* Scale pulse for buttons */
+@keyframes scale-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.disco-scale-pulse {
+  animation: scale-pulse 0.6s ease-in-out infinite;
+}
