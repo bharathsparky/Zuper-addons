@@ -123,7 +123,7 @@ export function Hero() {
             <Button 
               variant="secondary" 
               size="lg" 
-              href="/task.pdf" 
+              href="/prd.pdf" 
               download="UX-Design-Challenge-CaterPro.pdf"
               className={isDiscoMode ? 'disco-border !bg-black/50' : ''}
             >
